@@ -1,4 +1,4 @@
-# انتخابگر پروانه متن‌باز فارسی | Persian FOSS License Chooser
+# گزینش‌گر پروانه آزاد فارسی 
 
 <div align="center">
 
@@ -11,13 +11,14 @@
 **🌐 [مشاهده زنده | Live Demo](https://vercel.com/mirs0bhans-projects/v0-open-source-licence-chooser)**
 
 </div>
+<img width="1600" height="815" alt="image" src="https://github.com/user-attachments/assets/cfe4ecd6-193d-4f6d-9fe0-5de964e4965e" />
+
 
 ## 📋 فهرست مطالب | Table of Contents
 
 - [درباره پروژه | About](#درباره-پروژه--about)
 - [ویژگی‌ها | Features](#ویژگیها--features)
 - [فناوری‌های استفاده شده | Tech Stack](#فناوریهای-استفاده-شده--tech-stack)
-- [نصب و راه‌اندازی | Installation](#نصب-و-راهاندازی--installation)
 - [نحوه استفاده | Usage](#نحوه-استفاده--usage)
 - [معماری | Architecture](#معماری--architecture)
 - [مشارکت | Contributing](#مشارکت--contributing)
@@ -26,8 +27,6 @@
 ## 📖 درباره پروژه | About
 
 انتخابگر پروانه متن‌باز فارسی ابزاری وب‌محور است که به توسعه‌دهندگان و سازندگان محتوا کمک می‌کند تا بهترین پروانه را برای پروژه‌های خود انتخاب کنند. این ابزار از پروانه‌های FOSS، Creative Commons، Open Data و Font پشتیبانی می‌کند.
-
-The Persian FOSS License Chooser is a web-based tool that helps developers and content creators select the most appropriate license for their projects. It supports FOSS licenses, Creative Commons, Open Data, and Font licenses with full Persian language support and RTL layout.
 
 ### 🎯 هدف | Purpose
 
@@ -81,38 +80,6 @@ The Persian FOSS License Chooser is a web-based tool that helps developers and c
 ### Deployment
 - **Vercel** - Serverless deployment platform
 - **GitHub** - Version control and CI/CD
-
-## 🚀 نصب و راه‌اندازی | Installation
-
-### پیش‌نیازها | Prerequisites
-
-\`\`\`bash
-Node.js >= 18.0.0
-npm >= 9.0.0
-\`\`\`
-
-### نصب محلی | Local Setup
-
-1. **کلون کردن مخزن | Clone Repository**
-\`\`\`bash
-git clone https://github.com/MirS0bhan/fosscc.git
-cd fosscc
-\`\`\`
-
-2. **نصب وابستگی‌ها | Install Dependencies**
-\`\`\`bash
-npm install
-\`\`\`
-
-3. **اجرای محلی | Run Development Server**
-\`\`\`bash
-npm run dev
-\`\`\`
-
-4. **مشاهده در مرورگر | View in Browser**
-\`\`\`
-http://localhost:3000
-\`\`\`
 
 ### اسکریپت‌های موجود | Available Scripts
 

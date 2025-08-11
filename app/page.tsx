@@ -590,5 +590,378 @@ ${license.shareAlike ? "اگر این اثر را تغییر دادید، بای
     localStorage.removeItem("license-chooser-state")
   }
 
-  return <div>{/* License Chooser UI components go here */}</div>
+  const generateLicenseFile = (license: License) => {
+    const licenseText = generateLicenseText(license)
+    downloadFile(licenseText, "LICENSE")
+  }
+
+  const shareConfiguration = () => {
+    const shareableUrl = generateShareableUrl()
+    navigator.share({
+      title: "License Chooser Configuration",
+      text: "Here is the configuration for your license:",
+      url: shareableUrl,
+    })
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100" dir="rtl">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-emerald-800 mb-4">انتخابگر مجوز آزاد و آزاد محتوا</h1>
+          <p className="text-emerald-600 text-lg max-w-3xl mx-auto">
+            بهترین مجوز برای پروژه خود را با پاسخ به چند سوال ساده انتخاب کنید
+          </p>
+        </div>
+
+        {/* Main Layout - Equal Height Columns */}
+        <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-200px)]">
+          {/* Questions Column */}
+          <div className="lg:w-1/3 flex flex-col">
+            <div className="bg-white rounded-xl shadow-lg p-6 flex-1 overflow-y-auto">
+              <h2 className="text-2xl font-bold text-emerald-800 mb-6">سوالات</h2>
+
+              {/* Work Type Selection */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-emerald-700 mb-3">نوع اثر شما چیست؟</label>
+                <div className="space-y-2">
+                  {[
+                    { value: "software", label: "نرم‌افزار" },
+                    { value: "content", label: "محتوای خلاقانه" },
+                    { value: "data", label: "داده و پایگاه داده" },
+                    { value: "font", label: "فونت" },
+                  ].map((option) => (
+                    <label key={option.value} className="flex items-center">
+                      <input
+                        type="radio"
+                        name="workType"
+                        value={option.value}
+                        checked={formData.workType === option.value}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, workType: e.target.value as any }))}
+                        className="ml-2 text-emerald-600 focus:ring-emerald-500"
+                      />
+                      <span className="text-emerald-700">{option.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Conditional Questions Based on Work Type */}
+              {formData.workType && (
+                <div className="space-y-6">
+                  {/* Commercial Use */}
+                  <div>
+                    <label className="block text-sm font-medium text-emerald-700 mb-3">
+                      آیا می‌خواهید دیگران بتوانند از اثر شما استفاده تجاری کنند؟
+                    </label>
+                    <div className="space-y-2">
+                      {[
+                        { value: true, label: "بله، استفاده تجاری مجاز است" },
+                        { value: false, label: "خیر، فقط استفاده غیرتجاری" },
+                      ].map((option) => (
+                        <label key={option.value.toString()} className="flex items-center">
+                          <input
+                            type="radio"
+                            name="commercialUse"
+                            checked={formData.commercialUse === option.value}
+                            onChange={() => setFormData((prev) => ({ ...prev, commercialUse: option.value }))}
+                            className="ml-2 text-emerald-600 focus:ring-emerald-500"
+                          />
+                          <span className="text-emerald-700">{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Derivatives */}
+                  <div>
+                    <label className="block text-sm font-medium text-emerald-700 mb-3">
+                      آیا می‌خواهید دیگران بتوانند اثر شما را تغییر دهند؟
+                    </label>
+                    <div className="space-y-2">
+                      {[
+                        { value: true, label: "بله، تغییر و بهبود مجاز است" },
+                        { value: false, label: "خیر، فقط استفاده بدون تغییر" },
+                      ].map((option) => (
+                        <label key={option.value.toString()} className="flex items-center">
+                          <input
+                            type="radio"
+                            name="derivatives"
+                            checked={formData.derivatives === option.value}
+                            onChange={() => setFormData((prev) => ({ ...prev, derivatives: option.value }))}
+                            className="ml-2 text-emerald-600 focus:ring-emerald-500"
+                          />
+                          <span className="text-emerald-700">{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* ShareAlike - only if derivatives allowed */}
+                  {formData.derivatives === true && (
+                    <div>
+                      <label className="block text-sm font-medium text-emerald-700 mb-3">
+                        آیا می‌خواهید آثار مشتق نیز با همین مجوز منتشر شوند؟
+                      </label>
+                      <div className="space-y-2">
+                        {[
+                          { value: true, label: "بله، باید با همین مجوز باشد" },
+                          { value: false, label: "خیر، می‌تواند مجوز دیگری داشته باشد" },
+                        ].map((option) => (
+                          <label key={option.value.toString()} className="flex items-center">
+                            <input
+                              type="radio"
+                              name="shareAlike"
+                              checked={formData.shareAlike === option.value}
+                              onChange={() => setFormData((prev) => ({ ...prev, shareAlike: option.value }))}
+                              className="ml-2 text-emerald-600 focus:ring-emerald-500"
+                            />
+                            <span className="text-emerald-700">{option.label}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Software-specific questions */}
+                  {formData.workType === "software" && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-emerald-700 mb-3">
+                          چه سطحی از آزادی می‌خواهید؟
+                        </label>
+                        <div className="space-y-2">
+                          {[
+                            { value: "permissive", label: "سهیل‌گیر (MIT, BSD)" },
+                            { value: "weak-copyleft", label: "کپی‌لفت ضعیف (LGPL)" },
+                            { value: "strong-copyleft", label: "کپی‌لفت قوی (GPL)" },
+                            { value: "public-domain", label: "مالکیت عمومی" },
+                          ].map((option) => (
+                            <label key={option.value} className="flex items-center">
+                              <input
+                                type="radio"
+                                name="freedomLevel"
+                                value={option.value}
+                                checked={formData.freedomLevel === option.value}
+                                onChange={(e) => setFormData((prev) => ({ ...prev, freedomLevel: e.target.value }))}
+                                className="ml-2 text-emerald-600 focus:ring-emerald-500"
+                              />
+                              <span className="text-emerald-700">{option.label}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* Reset Button */}
+              <button
+                onClick={resetForm}
+                className="mt-6 w-full bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg hover:bg-emerald-200 transition-colors"
+              >
+                پاک کردن فرم
+              </button>
+            </div>
+          </div>
+
+          {/* Copyright Details Column */}
+          <div className="lg:w-1/3 flex flex-col">
+            <div className="bg-white rounded-xl shadow-lg p-6 flex-1 overflow-y-auto">
+              <h2 className="text-2xl font-bold text-emerald-800 mb-6">جزئیات کپی‌رایت</h2>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-emerald-700 mb-2">عنوان اثر</label>
+                  <input
+                    type="text"
+                    value={copyrightData.title}
+                    onChange={(e) => setCopyrightData((prev) => ({ ...prev, title: e.target.value }))}
+                    className="w-full px-3 py-2 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    placeholder="نام پروژه یا اثر"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-emerald-700 mb-2">نام نویسنده/سازنده</label>
+                  <input
+                    type="text"
+                    value={copyrightData.author}
+                    onChange={(e) => setCopyrightData((prev) => ({ ...prev, author: e.target.value }))}
+                    className="w-full px-3 py-2 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    placeholder="نام شما"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-emerald-700 mb-2">سال</label>
+                  <input
+                    type="text"
+                    value={copyrightData.year}
+                    onChange={(e) => setCopyrightData((prev) => ({ ...prev, year: e.target.value }))}
+                    className="w-full px-3 py-2 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    placeholder="1403"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-emerald-700 mb-2">سازمان (اختیاری)</label>
+                  <input
+                    type="text"
+                    value={copyrightData.organization}
+                    onChange={(e) => setCopyrightData((prev) => ({ ...prev, organization: e.target.value }))}
+                    className="w-full px-3 py-2 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    placeholder="نام شرکت یا سازمان"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-emerald-700 mb-2">وب‌سایت (اختیاری)</label>
+                  <input
+                    type="url"
+                    value={copyrightData.website}
+                    onChange={(e) => setCopyrightData((prev) => ({ ...prev, website: e.target.value }))}
+                    className="w-full px-3 py-2 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    placeholder="https://example.com"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-emerald-700 mb-2">ایمیل (اختیاری)</label>
+                  <input
+                    type="email"
+                    value={copyrightData.email}
+                    onChange={(e) => setCopyrightData((prev) => ({ ...prev, email: e.target.value }))}
+                    className="w-full px-3 py-2 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    placeholder="your@email.com"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* License Recommendations Column */}
+          <div className="lg:w-1/3 flex flex-col">
+            <div className="bg-white rounded-xl shadow-lg p-6 flex-1 overflow-y-auto">
+              <h2 className="text-2xl font-bold text-emerald-800 mb-6">پیشنهاد مجوز</h2>
+
+              {!formData.workType ? (
+                <div className="text-center py-12">
+                  <div className="text-emerald-400 mb-4">
+                    <svg className="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-emerald-600">لطفاً ابتدا نوع اثر خود را انتخاب کنید</p>
+                </div>
+              ) : recommendedLicenses.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-emerald-600">هیچ مجوز مناسبی یافت نشد. لطفاً سوالات را بررسی کنید.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {recommendedLicenses.slice(0, 5).map(({ license, score, reasons }) => (
+                    <div
+                      key={license.id}
+                      className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                        selectedLicense?.id === license.id
+                          ? "border-emerald-500 bg-emerald-50"
+                          : "border-emerald-200 hover:border-emerald-300"
+                      }`}
+                      onClick={() => setSelectedLicense(license)}
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-bold text-emerald-800">{license.name}</h3>
+                        <span className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-sm">{score}%</span>
+                      </div>
+
+                      <p className="text-sm text-emerald-600 mb-3">{license.summaryFa}</p>
+
+                      {reasons.length > 0 && (
+                        <div className="space-y-1">
+                          <p className="text-xs font-medium text-emerald-700">دلایل پیشنهاد:</p>
+                          <ul className="text-xs text-emerald-600 space-y-1">
+                            {reasons.map((reason, index) => (
+                              <li key={index} className="flex items-center">
+                                <span className="w-1 h-1 bg-emerald-400 rounded-full ml-2"></span>
+                                {reason}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* License Details and Download */}
+              {selectedLicense && (
+                <div className="mt-6 pt-6 border-t border-emerald-200">
+                  <h3 className="font-bold text-emerald-800 mb-4">جزئیات مجوز</h3>
+
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-emerald-600">شناسه SPDX:</span>
+                      <span className="font-mono text-emerald-800">{selectedLicense.spdxId}</span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="text-emerald-600">استفاده تجاری:</span>
+                      <span className={selectedLicense.commercial ? "text-green-600" : "text-red-600"}>
+                        {selectedLicense.commercial ? "مجاز" : "غیرمجاز"}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="text-emerald-600">آثار مشتق:</span>
+                      <span className={selectedLicense.derivatives ? "text-green-600" : "text-red-600"}>
+                        {selectedLicense.derivatives ? "مجاز" : "غیرمجاز"}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="text-emerald-600">نسبت‌دهی:</span>
+                      <span className={selectedLicense.attribution ? "text-amber-600" : "text-green-600"}>
+                        {selectedLicense.attribution ? "الزامی" : "اختیاری"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 space-y-3">
+                    <button
+                      onClick={() => generateLicenseFile(selectedLicense)}
+                      className="w-full bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
+                    >
+                      دانلود فایل مجوز
+                    </button>
+
+                    <button
+                      onClick={() => copyToClipboard(generateLicenseText(selectedLicense))}
+                      className="w-full bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg hover:bg-emerald-200 transition-colors"
+                    >
+                      کپی متن مجوز
+                    </button>
+
+                    <button
+                      onClick={shareConfiguration}
+                      className="w-full bg-teal-100 text-teal-700 px-4 py-2 rounded-lg hover:bg-teal-200 transition-colors"
+                    >
+                      اشتراک‌گذاری تنظیمات
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }

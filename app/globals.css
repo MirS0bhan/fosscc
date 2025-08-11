@@ -158,9 +158,133 @@ body {
   background: #555;
 }
 
+/* License chooser specific styles */
+/* License text display */
+.license-text {
+  font-family: "Courier New", monospace;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
+
+/* Form styling improvements */
+.form-section {
+  transition: all 0.3s ease;
+}
+
+.form-section:hover {
+  transform: translateY(-2px);
+}
+
+/* License card animations */
+.license-card {
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.license-card:hover {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.license-card.selected {
+  border-color: hsl(var(--primary));
+  background-color: hsl(var(--primary) / 0.05);
+}
+
+/* Responsive grid improvements */
+@media (max-width: 768px) {
+  .three-column-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .column-order-1 {
+    order: 1;
+  }
+  .column-order-2 {
+    order: 3;
+  }
+  .column-order-3 {
+    order: 2;
+  }
+}
+
+/* Loading states */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Toast notifications */
+.toast-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.toast-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.3s ease;
+}
+
+.toast-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.toast-exit-active {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.3s ease;
+}
+
 /* Print styles */
 @media print {
   .no-print {
     display: none !important;
+  }
+
+  .license-text {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  body {
+    font-size: 14px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .license-card {
+    border-width: 3px;
+  }
+
+  .license-card:hover,
+  .license-card.selected {
+    border-width: 4px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .form-section,
+  .license-card,
+  .toast-enter-active,
+  .toast-exit-active {
+    transition: none;
+  }
+
+  .loading-spinner {
+    animation: none;
   }
 }

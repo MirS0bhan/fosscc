@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
+import { AlertCircle, CheckCircle, Copy, Download, Share2, RotateCcw } from "lucide-react"
 
 // License data structure
 interface License {
@@ -33,7 +34,7 @@ const licenses: License[] = [
     category: "software",
     tags: ["سهیل‌گیر", "اجازهٔ تجاری", "آثار مشتق مجاز"],
     officialUrl: "https://opensource.org/licenses/MIT",
-    summaryFa: "مجوز بسیار سهیل و سهیل‌گیر که تنها الزام نسبت‌دهی دارد",
+    summaryFa: "پروانه بسیار سهیل و سهیل‌گیر که تنها الزام نسبت‌دهی دارد",
     templatePlaceholders: ["year", "author"],
     template: `MIT License
 
@@ -72,7 +73,7 @@ SOFTWARE.`,
     category: "software",
     tags: ["سهیل‌گیر", "Patent Grant", "اجازهٔ تجاری", "آثار مشتق مجاز"],
     officialUrl: "https://www.apache.org/licenses/LICENSE-2.0",
-    summaryFa: "مجوز سهیل‌گیر با حمایت از حق اختراع و الزامات بیشتر",
+    summaryFa: "پروانه سهیل‌گیر با حمایت از حق اختراع و الزامات بیشتر",
     templatePlaceholders: ["year", "author"],
     template: `Apache License
 Version 2.0, January 2004
@@ -107,7 +108,7 @@ limitations under the License.`,
     category: "software",
     tags: ["کپی‌لفت قوی", "اجازهٔ تجاری", "آثار مشتق مجاز", "انتشار مشابه"],
     officialUrl: "https://www.gnu.org/licenses/gpl-3.0.html",
-    summaryFa: "مجوز کپی‌لفت قوی که الزام انتشار کد مشتقات دارد",
+    summaryFa: "پروانه کپی‌لفت قوی که الزام انتشار کد مشتقات دارد",
     templatePlaceholders: ["year", "author", "project"],
     template: `{{project}}
 Copyright (C) {{year}} {{author}}
@@ -140,7 +141,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.`,
     category: "software",
     tags: ["کپی‌لفت شبکه", "اجازهٔ تجاری", "آثار مشتق مجاز", "انتشار مشابه"],
     officialUrl: "https://www.gnu.org/licenses/agpl-3.0.html",
-    summaryFa: "مجوز کپی‌لفت که استفاده شبکه‌ای را نیز شامل می‌شود",
+    summaryFa: "پروانه کپی‌لفت که استفاده شبکه‌ای را نیز شامل می‌شود",
     templatePlaceholders: ["year", "author", "project"],
     template: `{{project}}
 Copyright (C) {{year}} {{author}}
@@ -259,7 +260,7 @@ This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 Inte
     category: "data",
     tags: ["الزام نسبت‌دهی", "انتشار مشابه", "اجازهٔ تجاری"],
     officialUrl: "https://opendatacommons.org/licenses/odbl/",
-    summaryFa: "مجوز کپی‌لفت برای پایگاه‌های داده",
+    summaryFa: "پروانه کپی‌لفت برای پایگاه‌های داده",
     templatePlaceholders: ["author", "project"],
     template: `This {{project}} made available by {{author}} is licensed under the Open Database License: http://opendatacommons.org/licenses/odbl/1.0/. Any rights in individual contents of the database are licensed under the Database Contents License: http://opendatacommons.org/licenses/dbcl/1.0/`,
     permissive: false,
@@ -279,7 +280,7 @@ This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 Inte
     category: "font",
     tags: ["الزام نسبت‌دهی", "اجازهٔ تجاری", "آثار مشتق مجاز"],
     officialUrl: "https://scripts.sil.org/OFL",
-    summaryFa: "مجوز استاندارد برای قلم‌های آزاد",
+    summaryFa: "پروانه استاندارد برای قلم‌های آزاد",
     templatePlaceholders: ["author", "project"],
     template: `Copyright (c) {{author}}, with Reserved Font Name {{project}}.
 
@@ -329,6 +330,16 @@ interface CopyrightData {
   attributionText: string
 }
 
+interface UserFeedback {
+  type: "success" | "error" | "info"
+  message: string
+  visible: boolean
+}
+
+interface FormErrors {
+  [key: string]: string
+}
+
 export default function LicenseChooser() {
   const [formData, setFormData] = useState<FormData>({
     workType: "",
@@ -363,6 +374,39 @@ export default function LicenseChooser() {
   })
 
   const [selectedLicense, setSelectedLicense] = useState<License | null>(null)
+
+  const [feedback, setFeedback] = useState<UserFeedback>({
+    type: "info",
+    message: "",
+    visible: false,
+  })
+  const [formErrors, setFormErrors] = useState<FormErrors>({})
+  const [isLoading, setIsLoading] = useState(false)
+
+  const validateForm = useCallback((): FormErrors => {
+    const errors: FormErrors = {}
+
+    if (!formData.workType) {
+      errors.workType = "لطفاً نوع اثر خود را انتخاب کنید"
+    }
+
+    if (!copyrightData.author.trim()) {
+      errors.author = "نام نویسنده الزامی است"
+    }
+
+    if (!copyrightData.year.trim() || !/^\d{4}$/.test(copyrightData.year)) {
+      errors.year = "سال باید چهار رقم باشد"
+    }
+
+    return errors
+  }, [formData.workType, copyrightData.author, copyrightData.year])
+
+  const showFeedback = useCallback((type: UserFeedback["type"], message: string) => {
+    setFeedback({ type, message, visible: true })
+    setTimeout(() => {
+      setFeedback((prev) => ({ ...prev, visible: false }))
+    }, 5000)
+  }, [])
 
   // Load state from localStorage
   useEffect(() => {
@@ -449,7 +493,7 @@ export default function LicenseChooser() {
         if (formData.workType === "software") {
           if (formData.freedomLevel === "permissive" && license.permissive) {
             score += 15
-            reasons.push("مجوز سهیل‌گیر")
+            reasons.push("پروانه سهیل‌گیر")
           } else if (formData.freedomLevel === "strong-copyleft" && license.copyleft === "strong") {
             score += 15
             reasons.push("کپی‌لفت قوی")
@@ -502,9 +546,9 @@ export default function LicenseChooser() {
   }
 
   const generateReadmeSnippet = (license: License) => {
-    return `## مجوز
+    return `## پروانه
 
-این پروژه تحت مجوز ${license.name} منتشر شده است. برای جزئیات بیشتر فایل [LICENSE](LICENSE) را مطالعه کنید.
+این پروژه تحت پروانه ${license.name} منتشر شده است. برای جزئیات بیشتر فایل [LICENSE](LICENSE) را مطالعه کنید.
 
 ### نحوه استفاده
 
@@ -513,12 +557,12 @@ ${license.attribution ? `هنگام استفاده از این ${formData.workTy
 ${
   license.attribution
     ? `\`\`\`
-${copyrightData.attributionText || `${copyrightData.title} توسط ${copyrightData.author} تحت مجوز ${license.name}`}
+${copyrightData.attributionText || `${copyrightData.title} توسط ${copyrightData.author} تحت پروانه ${license.name}`}
 \`\`\``
     : ""
 }
 
-${license.shareAlike ? "اگر این اثر را تغییر دادید، باید آن را تحت همین مجوز منتشر کنید." : ""}
+${license.shareAlike ? "اگر این اثر را تغییر دادید، باید آن را تحت همین پروانه منتشر کنید." : ""}
 
 برای اطلاعات بیشتر: ${license.officialUrl}
 `
@@ -526,23 +570,53 @@ ${license.shareAlike ? "اگر این اثر را تغییر دادید، بای
 
   const copyToClipboard = async (text: string) => {
     try {
+      setIsLoading(true)
       await navigator.clipboard.writeText(text)
-      // You could add a toast notification here
+      showFeedback("success", "متن با موفقیت کپی شد")
     } catch (err) {
       console.error("Failed to copy:", err)
+      showFeedback("error", "خطا در کپی کردن متن")
+      // Fallback for older browsers
+      const textArea = document.createElement("textarea")
+      textArea.value = text
+      document.body.appendChild(textArea)
+      textArea.select()
+      try {
+        document.execCommand("copy")
+        showFeedback("success", "متن کپی شد")
+      } catch (fallbackErr) {
+        showFeedback("error", "امکان کپی کردن وجود ندارد")
+      }
+      document.body.removeChild(textArea)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const downloadFile = (content: string, filename: string) => {
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = filename
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
+    const errors = validateForm()
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors)
+      showFeedback("error", "لطفاً ابتدا اطلاعات مورد نیاز را تکمیل کنید")
+      return
+    }
+
+    try {
+      const blob = new Blob([content], { type: "text/plain;charset=utf-8" })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = filename
+      a.setAttribute("aria-label", `دانلود فایل ${filename}`)
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+      showFeedback("success", "فایل با موفقیت دانلود شد")
+    } catch (err) {
+      console.error("Download failed:", err)
+      showFeedback("error", "خطا در دانلود فایل")
+    }
   }
 
   const generateShareableUrl = () => {
@@ -604,48 +678,105 @@ ${license.shareAlike ? "اگر این اثر را تغییر دادید، بای
     })
   }
 
+  const shareNative = (shareableUrl: string) => {
+    navigator.share({
+      title: "License Chooser Configuration",
+      text: "Here is the configuration for your license:",
+      url: shareableUrl,
+    })
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100" dir="rtl">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "انتخاب‌گر پروانه آزاد",
+            description: "ابزار انتخاب بهترین پروانه آزاد برای پروژه‌های نرم‌افزاری، محتوای خلاقانه، داده و فونت",
+            url: typeof window !== "undefined" ? window.location.href : "",
+            applicationCategory: "DeveloperApplication",
+            operatingSystem: "Web Browser",
+            inLanguage: "fa",
+          }),
+        }}
+      />
+
       <div className="container mx-auto px-4 py-8">
+        {feedback.visible && (
+          <div
+            className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
+              feedback.type === "success"
+                ? "bg-green-100 text-green-800 border border-green-200"
+                : feedback.type === "error"
+                  ? "bg-red-100 text-red-800 border border-red-200"
+                  : "bg-blue-100 text-blue-800 border border-blue-200"
+            }`}
+            role="alert"
+            aria-live="polite"
+          >
+            <div className="flex items-center gap-2">
+              {feedback.type === "success" && <CheckCircle className="w-5 h-5" />}
+              {feedback.type === "error" && <AlertCircle className="w-5 h-5" />}
+              <span>{feedback.message}</span>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-emerald-800 mb-4">انتخابگر مجوز آزاد و آزاد محتوا</h1>
+        <header className="text-center mb-8">
+          <h1 className="text-4xl text-emerald-800 mb-4 font-sans font-black">گزینش‌گر پروانه آزاد</h1>
           <p className="text-emerald-600 text-lg max-w-3xl mx-auto">
-            بهترین مجوز برای پروژه خود را با پاسخ به چند سوال ساده انتخاب کنید
+            بهترین پروانه برای پروژه خود را با پاسخ به چند پرسش ساده انتخاب کنید
           </p>
-        </div>
+        </header>
 
         {/* Main Layout - Equal Height Columns */}
-        <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-200px)]">
+        <main className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-200px)]">
           {/* Questions Column */}
-          <div className="lg:w-1/3 flex flex-col">
+          <section className="lg:w-1/3 flex flex-col" aria-label="سوالات انتخاب پروانه">
             <div className="bg-white rounded-xl shadow-lg p-6 flex-1 overflow-y-auto">
               <h2 className="text-2xl font-bold text-emerald-800 mb-6">سوالات</h2>
 
               {/* Work Type Selection */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-emerald-700 mb-3">نوع اثر شما چیست؟</label>
-                <div className="space-y-2">
+              <fieldset className="mb-6">
+                <legend className="block text-sm font-medium text-emerald-700 mb-3">نوع اثر شما چیست؟</legend>
+                {formErrors.workType && (
+                  <div className="text-red-600 text-sm mb-2 flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4" />
+                    {formErrors.workType}
+                  </div>
+                )}
+                <div className="space-y-2" role="radiogroup" aria-required="true">
                   {[
                     { value: "software", label: "نرم‌افزار" },
                     { value: "content", label: "محتوای خلاقانه" },
                     { value: "data", label: "داده و پایگاه داده" },
                     { value: "font", label: "فونت" },
                   ].map((option) => (
-                    <label key={option.value} className="flex items-center">
+                    <label
+                      key={option.value}
+                      className="flex items-center cursor-pointer hover:bg-emerald-50 p-2 rounded"
+                    >
                       <input
                         type="radio"
                         name="workType"
                         value={option.value}
                         checked={formData.workType === option.value}
-                        onChange={(e) => setFormData((prev) => ({ ...prev, workType: e.target.value as any }))}
+                        onChange={(e) => {
+                          setFormData((prev) => ({ ...prev, workType: e.target.value as any }))
+                          setFormErrors((prev) => ({ ...prev, workType: "" }))
+                        }}
                         className="ml-2 text-emerald-600 focus:ring-emerald-500"
+                        aria-describedby={formErrors.workType ? "workType-error" : undefined}
                       />
                       <span className="text-emerald-700">{option.label}</span>
                     </label>
                   ))}
                 </div>
-              </div>
+              </fieldset>
 
               {/* Conditional Questions Based on Work Type */}
               {formData.workType && (
@@ -702,12 +833,12 @@ ${license.shareAlike ? "اگر این اثر را تغییر دادید، بای
                   {formData.derivatives === true && (
                     <div>
                       <label className="block text-sm font-medium text-emerald-700 mb-3">
-                        آیا می‌خواهید آثار مشتق نیز با همین مجوز منتشر شوند؟
+                        آیا می‌خواهید آثار مشتق نیز با همین پروانه منتشر شوند؟
                       </label>
                       <div className="space-y-2">
                         {[
-                          { value: true, label: "بله، باید با همین مجوز باشد" },
-                          { value: false, label: "خیر، می‌تواند مجوز دیگری داشته باشد" },
+                          { value: true, label: "بله، باید با همین پروانه باشد" },
+                          { value: false, label: "خیر، می‌تواند پروانه دیگری داشته باشد" },
                         ].map((option) => (
                           <label key={option.value.toString()} className="flex items-center">
                             <input
@@ -757,54 +888,109 @@ ${license.shareAlike ? "اگر این اثر را تغییر دادید، بای
                 </div>
               )}
 
-              {/* Reset Button */}
               <button
-                onClick={resetForm}
-                className="mt-6 w-full bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg hover:bg-emerald-200 transition-colors"
+                onClick={() => {
+                  if (window.confirm("آیا مطمئن هستید که می‌خواهید فرم را پاک کنید؟")) {
+                    resetForm()
+                    showFeedback("info", "فرم پاک شد")
+                  }
+                }}
+                className="mt-6 w-full bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg hover:bg-emerald-200 transition-colors flex items-center justify-center gap-2"
+                aria-label="پاک کردن تمام اطلاعات فرم"
               >
+                <RotateCcw className="w-4 h-4" />
                 پاک کردن فرم
               </button>
             </div>
-          </div>
+          </section>
 
           {/* Copyright Details Column */}
-          <div className="lg:w-1/3 flex flex-col">
+          <section className="lg:w-1/3 flex flex-col" aria-label="جزئیات حق‌تکثیر">
             <div className="bg-white rounded-xl shadow-lg p-6 flex-1 overflow-y-auto">
-              <h2 className="text-2xl font-bold text-emerald-800 mb-6">جزئیات کپی‌رایت</h2>
+              <h2 className="text-2xl font-bold text-emerald-800 mb-6">جزئیات حق‌تکثیر</h2>
 
-              <div className="space-y-4">
+              <form className="space-y-4" noValidate>
                 <div>
-                  <label className="block text-sm font-medium text-emerald-700 mb-2">عنوان اثر</label>
+                  <label htmlFor="title" className="block text-sm font-medium text-emerald-700 mb-2">
+                    عنوان اثر
+                  </label>
                   <input
+                    id="title"
                     type="text"
                     value={copyrightData.title}
                     onChange={(e) => setCopyrightData((prev) => ({ ...prev, title: e.target.value }))}
                     className="w-full px-3 py-2 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     placeholder="نام پروژه یا اثر"
+                    aria-describedby="title-help"
                   />
+                  <div id="title-help" className="text-xs text-emerald-600 mt-1">
+                    نام پروژه یا اثر خود را وارد کنید
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-emerald-700 mb-2">نام نویسنده/سازنده</label>
+                  <label htmlFor="author" className="block text-sm font-medium text-emerald-700 mb-2">
+                    نام نویسنده/سازنده <span className="text-red-500">*</span>
+                  </label>
+                  {formErrors.author && (
+                    <div className="text-red-600 text-sm mb-2 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {formErrors.author}
+                    </div>
+                  )}
                   <input
+                    id="author"
                     type="text"
                     value={copyrightData.author}
-                    onChange={(e) => setCopyrightData((prev) => ({ ...prev, author: e.target.value }))}
-                    className="w-full px-3 py-2 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    onChange={(e) => {
+                      setCopyrightData((prev) => ({ ...prev, author: e.target.value }))
+                      setFormErrors((prev) => ({ ...prev, author: "" }))
+                    }}
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                      formErrors.author ? "border-red-300" : "border-emerald-300"
+                    }`}
                     placeholder="نام شما"
+                    required
+                    aria-required="true"
+                    aria-invalid={!!formErrors.author}
+                    aria-describedby={formErrors.author ? "author-error" : "author-help"}
                   />
+                  <div id="author-help" className="text-xs text-emerald-600 mt-1">
+                    نام شخص یا سازمان صاحب اثر
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-emerald-700 mb-2">سال</label>
+                  <label htmlFor="year" className="block text-sm font-medium text-emerald-700 mb-2">
+                    سال <span className="text-red-500">*</span>
+                  </label>
+                  {formErrors.year && (
+                    <div className="text-red-600 text-sm mb-2 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {formErrors.year}
+                    </div>
+                  )}
                   <input
+                    id="year"
                     type="text"
                     value={copyrightData.year}
-                    onChange={(e) => setCopyrightData((prev) => ({ ...prev, year: e.target.value }))}
-                    className="w-full px-3 py-2 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    onChange={(e) => {
+                      setCopyrightData((prev) => ({ ...prev, year: e.target.value }))
+                      setFormErrors((prev) => ({ ...prev, year: "" }))
+                    }}
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                      formErrors.year ? "border-red-300" : "border-emerald-300"
+                    }`}
                     placeholder="1403"
+                    required
+                    aria-required="true"
+                    aria-invalid={!!formErrors.year}
+                    pattern="\d{4}"
+                    maxLength={4}
                   />
                 </div>
+
+                {/* ... existing optional fields ... */}
 
                 <div>
                   <label className="block text-sm font-medium text-emerald-700 mb-2">سازمان (اختیاری)</label>
@@ -818,7 +1004,7 @@ ${license.shareAlike ? "اگر این اثر را تغییر دادید، بای
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-emerald-700 mb-2">وب‌سایت (اختیاری)</label>
+                  <label className="block text-sm font-medium text-emerald-700 mb-2">وبگاه (اختیاری)</label>
                   <input
                     type="url"
                     value={copyrightData.website}
@@ -838,129 +1024,100 @@ ${license.shareAlike ? "اگر این اثر را تغییر دادید، بای
                     placeholder="your@email.com"
                   />
                 </div>
-              </div>
+              </form>
             </div>
-          </div>
+          </section>
 
           {/* License Recommendations Column */}
-          <div className="lg:w-1/3 flex flex-col">
+          <section className="lg:w-1/3 flex flex-col" aria-label="پیشنهادات پروانه">
             <div className="bg-white rounded-xl shadow-lg p-6 flex-1 overflow-y-auto">
-              <h2 className="text-2xl font-bold text-emerald-800 mb-6">پیشنهاد مجوز</h2>
+              <h2 className="text-2xl font-bold text-emerald-800 mb-6">پیشنهاد پروانه</h2>
 
-              {!formData.workType ? (
-                <div className="text-center py-12">
-                  <div className="text-emerald-400 mb-4">
-                    <svg className="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <p className="text-emerald-600">لطفاً ابتدا نوع اثر خود را انتخاب کنید</p>
-                </div>
-              ) : recommendedLicenses.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-emerald-600">هیچ مجوز مناسبی یافت نشد. لطفاً سوالات را بررسی کنید.</p>
+              {recommendedLicenses.length === 0 ? (
+                <div className="text-center py-8 text-emerald-600">
+                  <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <p>لطفاً ابتدا سوالات را پاسخ دهید تا بهترین پروانه برای شما پیشنهاد شود</p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {recommendedLicenses.slice(0, 5).map(({ license, score, reasons }) => (
-                    <div
-                      key={license.id}
-                      className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
-                        selectedLicense?.id === license.id
+                <div className="space-y-4" role="list">
+                  {recommendedLicenses.map((item, index) => (
+                    <article
+                      key={item.license.id}
+                      className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                        selectedLicense?.id === item.license.id
                           ? "border-emerald-500 bg-emerald-50"
-                          : "border-emerald-200 hover:border-emerald-300"
+                          : "border-emerald-200 hover:border-emerald-300 hover:bg-emerald-25"
                       }`}
-                      onClick={() => setSelectedLicense(license)}
+                      onClick={() => setSelectedLicense(item.license)}
+                      role="listitem"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault()
+                          setSelectedLicense(item.license)
+                        }
+                      }}
+                      aria-label={`انتخاب پروانه ${item.license.name}`}
                     >
                       <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-bold text-emerald-800">{license.name}</h3>
-                        <span className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-sm">{score}%</span>
+                        <h3 className="font-bold text-emerald-800">{item.license.name}</h3>
+                        <span className="text-sm bg-emerald-100 text-emerald-700 px-2 py-1 rounded">
+                          امتیاز: {item.score}
+                        </span>
                       </div>
-
-                      <p className="text-sm text-emerald-600 mb-3">{license.summaryFa}</p>
-
-                      {reasons.length > 0 && (
-                        <div className="space-y-1">
-                          <p className="text-xs font-medium text-emerald-700">دلایل پیشنهاد:</p>
-                          <ul className="text-xs text-emerald-600 space-y-1">
-                            {reasons.map((reason, index) => (
-                              <li key={index} className="flex items-center">
-                                <span className="w-1 h-1 bg-emerald-400 rounded-full ml-2"></span>
-                                {reason}
-                              </li>
-                            ))}
-                          </ul>
+                      <p className="text-emerald-600 text-sm mb-2">{item.license.summaryFa}</p>
+                      {item.reasons.length > 0 && (
+                        <div className="text-xs text-emerald-500">
+                          <strong>دلایل پیشنهاد:</strong> {item.reasons.join("، ")}
                         </div>
                       )}
-                    </div>
+                    </article>
                   ))}
                 </div>
               )}
 
-              {/* License Details and Download */}
               {selectedLicense && (
-                <div className="mt-6 pt-6 border-t border-emerald-200">
-                  <h3 className="font-bold text-emerald-800 mb-4">جزئیات مجوز</h3>
+                <div className="mt-6 space-y-3">
+                  <button
+                    onClick={() => copyToClipboard(generateLicenseText(selectedLicense))}
+                    disabled={isLoading}
+                    className="w-full bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                    aria-label="کپی متن پروانه"
+                  >
+                    <Copy className="w-4 h-4" />
+                    {isLoading ? "در حال کپی..." : "کپی متن پروانه"}
+                  </button>
 
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-emerald-600">شناسه SPDX:</span>
-                      <span className="font-mono text-emerald-800">{selectedLicense.spdxId}</span>
-                    </div>
+                  <button
+                    onClick={() => downloadFile(generateLicenseText(selectedLicense), "LICENSE")}
+                    className="w-full bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg hover:bg-emerald-200 transition-colors flex items-center justify-center gap-2"
+                    aria-label="دانلود فایل پروانه"
+                  >
+                    <Download className="w-4 h-4" />
+                    دانلود فایل LICENSE
+                  </button>
 
-                    <div className="flex justify-between">
-                      <span className="text-emerald-600">استفاده تجاری:</span>
-                      <span className={selectedLicense.commercial ? "text-green-600" : "text-red-600"}>
-                        {selectedLicense.commercial ? "مجاز" : "غیرمجاز"}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <span className="text-emerald-600">آثار مشتق:</span>
-                      <span className={selectedLicense.derivatives ? "text-green-600" : "text-red-600"}>
-                        {selectedLicense.derivatives ? "مجاز" : "غیرمجاز"}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <span className="text-emerald-600">نسبت‌دهی:</span>
-                      <span className={selectedLicense.attribution ? "text-amber-600" : "text-green-600"}>
-                        {selectedLicense.attribution ? "الزامی" : "اختیاری"}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 space-y-3">
-                    <button
-                      onClick={() => generateLicenseFile(selectedLicense)}
-                      className="w-full bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
-                    >
-                      دانلود فایل مجوز
-                    </button>
-
-                    <button
-                      onClick={() => copyToClipboard(generateLicenseText(selectedLicense))}
-                      className="w-full bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg hover:bg-emerald-200 transition-colors"
-                    >
-                      کپی متن مجوز
-                    </button>
-
-                    <button
-                      onClick={shareConfiguration}
-                      className="w-full bg-teal-100 text-teal-700 px-4 py-2 rounded-lg hover:bg-teal-200 transition-colors"
-                    >
-                      اشتراک‌گذاری تنظیمات
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => {
+                      const shareableUrl = generateShareableUrl()
+                      if (navigator.share) {
+                        shareNative(shareableUrl)
+                      } else {
+                        copyToClipboard(shareableUrl)
+                        showFeedback("success", "لینک اشتراک‌گذاری کپی شد")
+                      }
+                    }}
+                    className="w-full bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg hover:bg-emerald-200 transition-colors flex items-center justify-center gap-2"
+                    aria-label="اشتراک‌گذاری تنظیمات"
+                  >
+                    <Share2 className="w-4 h-4" />
+                    اشتراک‌گذاری
+                  </button>
                 </div>
               )}
             </div>
-          </div>
-        </div>
+          </section>
+        </main>
       </div>
     </div>
   )

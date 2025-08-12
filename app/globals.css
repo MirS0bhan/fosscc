@@ -1,11 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@theme {
-  --font-vazir: "Vazirmatn", system-ui, sans-serif;
-}
+@custom-variant dark (&:is(.dark *));
 
 :root {
+  --font-vazir: "Vazirmatn", system-ui, sans-serif;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -77,7 +76,6 @@
 }
 
 @theme inline {
-  /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -140,26 +138,24 @@ body {
   text-align: left;
 }
 
-/* Custom scrollbar for RTL */
+/* Custom scrollbar for RTL with dark mode support */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  @apply bg-muted;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
+  @apply bg-muted-foreground/50 rounded;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  @apply bg-muted-foreground/70;
 }
 
 /* License chooser specific styles */
-/* License text display */
 .license-text {
   font-family: "Courier New", monospace;
   white-space: pre-wrap;
@@ -183,13 +179,11 @@ body {
 }
 
 .license-card:hover {
-  border-color: hsl(var(--primary));
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  @apply border-primary shadow-lg;
 }
 
 .license-card.selected {
-  border-color: hsl(var(--primary));
-  background-color: hsl(var(--primary) / 0.05);
+  @apply border-primary bg-primary/5;
 }
 
 /* Responsive grid improvements */

@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://license-chooser.vercel.app"),
+  metadataBase: new URL("https://fosscc.vercel.app"),
   alternates: {
     canonical: "/",
     languages: {
@@ -49,11 +49,20 @@ export const metadata: Metadata = {
     title: "پروانه‌یار — انتخاب‌گر پروانه‌های آزاد/باز",
     description: "به انتخاب بهترین پروانه برای نرم‌افزار، محتوا، داده یا قلم کمک می‌کنیم",
     siteName: "پروانه‌یار",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "پروانه‌یار - انتخاب‌گر پروانه‌های آزاد و باز",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "پروانه‌یار — انتخاب‌گر پروانه‌های آزاد/باز",
     description: "به انتخاب بهترین پروانه برای نرم‌افزار، محتوا، داده یا قلم کمک می‌کنیم",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -103,6 +112,34 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileColor" content="#059669" />
         <meta name="msapplication-tap-highlight" content="no" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              name: "پروانه‌یار",
+              alternateName: "License Chooser",
+              description: "ابزار جامع انتخاب پروانه‌های FOSS، Creative Commons و Open Data",
+              url: "https://fosscc.vercel.app",
+              applicationCategory: "DeveloperApplication",
+              operatingSystem: "Any",
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "USD",
+              },
+              author: {
+                "@type": "Organization",
+                name: "FOSS Community",
+              },
+              inLanguage: ["fa", "en"],
+              isAccessibleForFree: true,
+              keywords: "open source license, FOSS, Creative Commons, GPL, MIT, Apache, CC, Open Data",
+              softwareVersion: "1.0.0",
+            }),
+          }}
+        />
       </head>
       <body className={`${vazirmatn.className} font-sans antialiased`}>
         <a

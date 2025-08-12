@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://fosscc.vercel.app/sitemap.xml
+
+# Persian license chooser for FOSS/CC/Open Content
+# انتخابگر پروانه فارسی برای محتوای آزاد و متن‌باز

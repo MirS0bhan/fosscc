@@ -5,6 +5,13 @@
   --font-vazir: "Vazirmatn", system-ui, sans-serif;
 }
 
+/* Added font-display swap for better performance */
+@font-face {
+  font-family: "Vazirmatn";
+  font-display: swap;
+  src: local("Vazirmatn");
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -287,4 +294,51 @@ body {
   .loading-spinner {
     animation: none;
   }
+}
+
+/* Added critical CSS inlining for above-the-fold content */
+.critical-above-fold {
+  font-family: var(--font-vazir);
+  direction: rtl;
+  text-align: right;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* Added performance optimizations for images */
+.optimized-image {
+  content-visibility: auto;
+  contain-intrinsic-size: 300px 200px;
+}
+
+.lazy-load {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.lazy-load.loaded {
+  opacity: 1;
+}
+
+/* Added performance improvements for animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Added container queries for better responsive performance */
+@container (min-width: 768px) {
+  .responsive-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Added preload hints for critical resources */
+.preload-hint::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  background-image: url("/placeholder.svg?height=32&width=32");
+  background-size: 0;
 }

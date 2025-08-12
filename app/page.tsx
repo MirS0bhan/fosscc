@@ -86,7 +86,7 @@ export default function LicenseChooser() {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100 dark:from-gray-900 dark:to-slate-900"
+      className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100 dark:from-slate-800 dark:to-slate-900"
       dir="rtl"
     >
       <script
@@ -164,7 +164,7 @@ export default function LicenseChooser() {
 
           {/* Copyright Details Column */}
           <section className="lg:w-1/3 flex flex-col" aria-label="جزئیات کپی‌رایت">
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 flex-1 overflow-y-auto border dark:border-slate-700">
+            <div className="bg-white dark:bg-slate-700 rounded-xl shadow-lg p-6 flex-1 overflow-y-auto border dark:border-slate-600">
               <h2 className="text-2xl font-bold text-emerald-800 dark:text-emerald-100 mb-6">جزئیات کپی‌رایت</h2>
 
               <div className="space-y-4">
@@ -180,7 +180,7 @@ export default function LicenseChooser() {
                     id="title"
                     value={copyrightData.title}
                     onChange={(e) => setCopyrightData((prev) => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-3 py-2 border border-emerald-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-emerald-500 dark:focus:border-emerald-400"
+                    className="w-full px-3 py-2 border border-emerald-300 dark:border-slate-500 bg-white dark:bg-slate-600 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-emerald-500 dark:focus:border-emerald-400"
                     placeholder="نام پروژه خود را وارد کنید"
                   />
                 </div>
@@ -206,10 +206,10 @@ export default function LicenseChooser() {
                       setCopyrightData((prev) => ({ ...prev, author: e.target.value }))
                       setFormErrors((prev) => ({ ...prev, author: "" }))
                     }}
-                    className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-emerald-500 dark:focus:border-emerald-400 ${
+                    className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-slate-600 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-emerald-500 dark:focus:border-emerald-400 ${
                       formErrors.author
                         ? "border-red-300 dark:border-red-500"
-                        : "border-emerald-300 dark:border-slate-600"
+                        : "border-emerald-300 dark:border-slate-500"
                     }`}
                     placeholder="نام خود را وارد کنید"
                     required
@@ -238,10 +238,10 @@ export default function LicenseChooser() {
                       setCopyrightData((prev) => ({ ...prev, year: e.target.value }))
                       setFormErrors((prev) => ({ ...prev, year: "" }))
                     }}
-                    className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-emerald-500 dark:focus:border-emerald-400 ${
+                    className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-slate-600 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-emerald-500 dark:focus:border-emerald-400 ${
                       formErrors.year
                         ? "border-red-300 dark:border-red-500"
-                        : "border-emerald-300 dark:border-slate-600"
+                        : "border-emerald-300 dark:border-slate-500"
                     }`}
                     placeholder="2024"
                     required
@@ -253,7 +253,7 @@ export default function LicenseChooser() {
               <div className="mt-6 flex gap-2">
                 <button
                   onClick={resetForm}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors border dark:border-slate-600"
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-slate-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-500 transition-colors border dark:border-slate-500"
                   aria-label="بازنشانی فرم"
                 >
                   <RotateCcw className="w-4 h-4" />
@@ -261,7 +261,7 @@ export default function LicenseChooser() {
                 </button>
                 <button
                   onClick={shareConfiguration}
-                  className="flex items-center gap-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-200 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-700 transition-colors border dark:border-emerald-600"
+                  className="flex items-center gap-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-700 text-emerald-700 dark:text-emerald-200 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-600 transition-colors border dark:border-emerald-600"
                   aria-label="اشتراک‌گذاری تنظیمات"
                 >
                   <Share2 className="w-4 h-4" />
@@ -273,7 +273,7 @@ export default function LicenseChooser() {
 
           {/* License Recommendations Column */}
           <section className="lg:w-1/3 flex flex-col" aria-label="پیشنهادات پروانه">
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 flex-1 overflow-y-auto border dark:border-slate-700">
+            <div className="bg-white dark:bg-slate-700 rounded-xl shadow-lg p-6 flex-1 overflow-y-auto border dark:border-slate-600">
               <h2 className="text-2xl font-bold text-emerald-800 dark:text-emerald-100 mb-6">پیشنهادات پروانه</h2>
 
               {recommendedLicenses.length === 0 ? (
@@ -288,8 +288,8 @@ export default function LicenseChooser() {
                       key={license.id}
                       className={`border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
                         selectedLicense?.id === license.id
-                          ? "border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 shadow-md"
-                          : "border-emerald-200 dark:border-slate-600 hover:border-emerald-300 dark:hover:border-emerald-500 hover:bg-emerald-25 dark:hover:bg-slate-700/50"
+                          ? "border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-800/30 shadow-md"
+                          : "border-emerald-200 dark:border-slate-500 hover:border-emerald-300 dark:hover:border-emerald-400 hover:bg-emerald-25 dark:hover:bg-slate-600/50"
                       }`}
                       onClick={() => setSelectedLicense(license)}
                       role="button"

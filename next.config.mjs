@@ -1,20 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   images: {
     unoptimized: true,
   },
   output: 'export',
   trailingSlash: true,
-  async generateBuildId() {
-    return 'build'
+  experimental: {
+    optimizePackageImports: ['lucide-react']
   },
-  // Added security headers for production
+  compress: true,
+  poweredByHeader: false,
   async headers() {
     return [
       {
@@ -23,10 +24,6 @@ const nextConfig = {
           {
             key: 'X-DNS-Prefetch-Control',
             value: 'on'
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload'
           },
           {
             key: 'X-XSS-Protection',
@@ -48,28 +45,17 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "script-src 'self' 'unsafe-inline'",
               "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
               "font-src 'self' fonts.gstatic.com",
-              "img-src 'self' data: blob: https:",
-              "connect-src 'self'",
-              "frame-ancestors 'none'",
-              "base-uri 'self'",
-              "form-action 'self'"
+              "img-src 'self' data: blob:",
+              "connect-src 'self'"
             ].join('; ')
           }
         ]
       }
     ]
-  },
-  // Added performance optimizations
-  experimental: {
-    optimizeCss: true,
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons']
-  },
-  // Added compression and caching
-  compress: true,
-  poweredByHeader: false
+  }
 }
 
 export default nextConfig

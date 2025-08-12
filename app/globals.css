@@ -1,10 +1,10 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
 @theme {
   --font-vazir: "Vazirmatn", system-ui, sans-serif;
 }
 
+/* Removed tw-animate-css import that was causing build issues */
 /* Added font-display swap for better performance */
 @font-face {
   font-family: "Vazirmatn";

@@ -363,6 +363,10 @@ export default function LicenseChooser() {
             </div>
           </section>
         </main>
+
+        <footer className="mt-8 pt-6 border-t border-emerald-200 text-center">
+          <p className="text-sm text-emerald-600">تمام محتوای این وب‌سایت تحت پروانه CC0 (مالکیت عمومی) منتشر شده است</p>
+        </footer>
       </div>
     </div>
   )

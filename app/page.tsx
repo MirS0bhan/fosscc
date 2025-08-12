@@ -86,7 +86,7 @@ export default function LicenseChooser() {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100 dark:from-emerald-950 dark:to-teal-950"
+      className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100 dark:from-gray-900 dark:to-slate-900"
       dir="rtl"
     >
       <script
@@ -132,7 +132,7 @@ export default function LicenseChooser() {
             href="https://github.com/MirS0bhan/fosscc/"
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute left-0 top-0 p-2 text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors duration-200"
+            className="absolute left-0 top-0 p-2 text-emerald-600 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-100 transition-colors duration-200"
             aria-label="مشاهده پروژه در گیت‌هاب"
           >
             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -144,10 +144,10 @@ export default function LicenseChooser() {
             <ThemeToggle />
           </div>
 
-          <h1 className="text-4xl text-emerald-800 dark:text-emerald-200 mb-4 font-sans font-black">
+          <h1 className="text-4xl text-emerald-800 dark:text-emerald-100 mb-4 font-sans font-black">
             گزینش‌گر پروانه آزاد
           </h1>
-          <p className="text-emerald-600 dark:text-emerald-400 text-lg max-w-3xl mx-auto">
+          <p className="text-emerald-600 dark:text-emerald-300 text-lg max-w-3xl mx-auto">
             بهترین پروانه برای پروژه خود را با پاسخ به چند پرسش ساده انتخاب کنید
           </p>
         </header>
@@ -164,14 +164,14 @@ export default function LicenseChooser() {
 
           {/* Copyright Details Column */}
           <section className="lg:w-1/3 flex flex-col" aria-label="جزئیات کپی‌رایت">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex-1 overflow-y-auto">
-              <h2 className="text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-6">جزئیات کپی‌رایت</h2>
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 flex-1 overflow-y-auto border dark:border-slate-700">
+              <h2 className="text-2xl font-bold text-emerald-800 dark:text-emerald-100 mb-6">جزئیات کپی‌رایت</h2>
 
               <div className="space-y-4">
                 <div>
                   <label
                     htmlFor="title"
-                    className="block text-sm font-medium text-emerald-700 dark:text-emerald-300 mb-2"
+                    className="block text-sm font-medium text-emerald-700 dark:text-emerald-200 mb-2"
                   >
                     نام پروژه
                   </label>
@@ -180,7 +180,7 @@ export default function LicenseChooser() {
                     id="title"
                     value={copyrightData.title}
                     onChange={(e) => setCopyrightData((prev) => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-3 py-2 border border-emerald-300 dark:border-emerald-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full px-3 py-2 border border-emerald-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-emerald-500 dark:focus:border-emerald-400"
                     placeholder="نام پروژه خود را وارد کنید"
                   />
                 </div>
@@ -188,7 +188,7 @@ export default function LicenseChooser() {
                 <div>
                   <label
                     htmlFor="author"
-                    className="block text-sm font-medium text-emerald-700 dark:text-emerald-300 mb-2"
+                    className="block text-sm font-medium text-emerald-700 dark:text-emerald-200 mb-2"
                   >
                     نام نویسنده *
                   </label>
@@ -206,10 +206,10 @@ export default function LicenseChooser() {
                       setCopyrightData((prev) => ({ ...prev, author: e.target.value }))
                       setFormErrors((prev) => ({ ...prev, author: "" }))
                     }}
-                    className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                    className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-emerald-500 dark:focus:border-emerald-400 ${
                       formErrors.author
-                        ? "border-red-300 dark:border-red-600"
-                        : "border-emerald-300 dark:border-emerald-600"
+                        ? "border-red-300 dark:border-red-500"
+                        : "border-emerald-300 dark:border-slate-600"
                     }`}
                     placeholder="نام خود را وارد کنید"
                     required
@@ -220,7 +220,7 @@ export default function LicenseChooser() {
                 <div>
                   <label
                     htmlFor="year"
-                    className="block text-sm font-medium text-emerald-700 dark:text-emerald-300 mb-2"
+                    className="block text-sm font-medium text-emerald-700 dark:text-emerald-200 mb-2"
                   >
                     سال *
                   </label>
@@ -238,10 +238,10 @@ export default function LicenseChooser() {
                       setCopyrightData((prev) => ({ ...prev, year: e.target.value }))
                       setFormErrors((prev) => ({ ...prev, year: "" }))
                     }}
-                    className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                    className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-emerald-500 dark:focus:border-emerald-400 ${
                       formErrors.year
-                        ? "border-red-300 dark:border-red-600"
-                        : "border-emerald-300 dark:border-emerald-600"
+                        ? "border-red-300 dark:border-red-500"
+                        : "border-emerald-300 dark:border-slate-600"
                     }`}
                     placeholder="2024"
                     required
@@ -253,7 +253,7 @@ export default function LicenseChooser() {
               <div className="mt-6 flex gap-2">
                 <button
                   onClick={resetForm}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors border dark:border-slate-600"
                   aria-label="بازنشانی فرم"
                 >
                   <RotateCcw className="w-4 h-4" />
@@ -261,7 +261,7 @@ export default function LicenseChooser() {
                 </button>
                 <button
                   onClick={shareConfiguration}
-                  className="flex items-center gap-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-200 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-700 transition-colors border dark:border-emerald-600"
                   aria-label="اشتراک‌گذاری تنظیمات"
                 >
                   <Share2 className="w-4 h-4" />
@@ -273,13 +273,13 @@ export default function LicenseChooser() {
 
           {/* License Recommendations Column */}
           <section className="lg:w-1/3 flex flex-col" aria-label="پیشنهادات پروانه">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex-1 overflow-y-auto">
-              <h2 className="text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-6">پیشنهادات پروانه</h2>
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 flex-1 overflow-y-auto border dark:border-slate-700">
+              <h2 className="text-2xl font-bold text-emerald-800 dark:text-emerald-100 mb-6">پیشنهادات پروانه</h2>
 
               {recommendedLicenses.length === 0 ? (
                 <div className="text-center py-8">
-                  <AlertCircle className="w-12 h-12 text-emerald-400 dark:text-emerald-500 mx-auto mb-4" />
-                  <p className="text-emerald-600 dark:text-emerald-400">لطفاً ابتدا سوالات را پاسخ دهید</p>
+                  <AlertCircle className="w-12 h-12 text-emerald-400 dark:text-emerald-300 mx-auto mb-4" />
+                  <p className="text-emerald-600 dark:text-emerald-300">لطفاً ابتدا سوالات را پاسخ دهید</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -288,8 +288,8 @@ export default function LicenseChooser() {
                       key={license.id}
                       className={`border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
                         selectedLicense?.id === license.id
-                          ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 shadow-md"
-                          : "border-emerald-200 dark:border-emerald-700 hover:border-emerald-300 dark:hover:border-emerald-600 hover:bg-emerald-25 dark:hover:bg-emerald-900/20"
+                          ? "border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 shadow-md"
+                          : "border-emerald-200 dark:border-slate-600 hover:border-emerald-300 dark:hover:border-emerald-500 hover:bg-emerald-25 dark:hover:bg-slate-700/50"
                       }`}
                       onClick={() => setSelectedLicense(license)}
                       role="button"
@@ -303,24 +303,24 @@ export default function LicenseChooser() {
                       }}
                     >
                       <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-bold text-emerald-800 dark:text-emerald-200">{license.name}</h3>
+                        <h3 className="font-bold text-emerald-800 dark:text-emerald-100">{license.name}</h3>
                         <div className="flex flex-wrap gap-1">
                           {license.tags.slice(0, 2).map((tag) => (
                             <span
                               key={tag}
-                              className="px-2 py-1 bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded-full"
+                              className="px-2 py-1 bg-emerald-100 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-200 text-xs rounded-full"
                             >
                               {tag}
                             </span>
                           ))}
                         </div>
                       </div>
-                      <p className="text-emerald-600 dark:text-emerald-400 text-sm mb-3">{license.summaryFa}</p>
+                      <p className="text-emerald-600 dark:text-emerald-300 text-sm mb-3">{license.summaryFa}</p>
                       <a
                         href={license.officialUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-emerald-500 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-200 text-sm underline"
+                        className="text-emerald-500 dark:text-emerald-300 hover:text-emerald-700 dark:hover:text-emerald-100 text-sm underline"
                         onClick={(e) => e.stopPropagation()}
                       >
                         مشاهده متن کامل پروانه
@@ -332,8 +332,8 @@ export default function LicenseChooser() {
 
               {/* License Generation */}
               {selectedLicense && (
-                <div className="mt-6 pt-6 border-t border-emerald-200 dark:border-emerald-700">
-                  <h3 className="font-bold text-emerald-800 dark:text-emerald-200 mb-4">تولید فایل پروانه</h3>
+                <div className="mt-6 pt-6 border-t border-emerald-200 dark:border-slate-600">
+                  <h3 className="font-bold text-emerald-800 dark:text-emerald-100 mb-4">تولید فایل پروانه</h3>
                   <div className="space-y-3">
                     <button
                       onClick={() => {
@@ -363,7 +363,7 @@ export default function LicenseChooser() {
                         downloadFile(licenseText, "LICENSE", "text/plain")
                         showFeedback("success", "فایل پروانه دانلود شد")
                       }}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-200 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-700 transition-colors"
                     >
                       <Download className="w-4 h-4" />
                       دانلود فایل LICENSE
@@ -379,7 +379,7 @@ export default function LicenseChooser() {
                         const readmeSnippet = generateReadmeSnippet(selectedLicense, copyrightData)
                         copyToClipboard(readmeSnippet, "کد README کپی شد")
                       }}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-200 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-700 transition-colors"
                     >
                       <Copy className="w-4 h-4" />
                       کپی کد README
@@ -391,8 +391,8 @@ export default function LicenseChooser() {
           </section>
         </main>
 
-        <footer className="mt-8 pt-6 border-t border-emerald-200 dark:border-emerald-700 text-center">
-          <p className="text-sm text-emerald-600 dark:text-emerald-400">
+        <footer className="mt-8 pt-6 border-t border-emerald-200 dark:border-slate-600 text-center">
+          <p className="text-sm text-emerald-600 dark:text-emerald-300">
             تمام محتوای این وب‌سایت تحت پروانه CC0 (مالکیت عمومی) منتشر شده است
           </p>
         </footer>

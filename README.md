@@ -216,4 +216,3 @@ Made with ❤️ for the Persian Open Source Community
 [🌟 ستاره بدهید](https://github.com/MirS0bhan/fosscc) | [🐛 گزارش مشکل](https://github.com/MirS0bhan/fosscc/issues) | [💡 پیشنهاد ویژگی](https://github.com/MirS0bhan/fosscc/issues/new)
 
 </div>
-
